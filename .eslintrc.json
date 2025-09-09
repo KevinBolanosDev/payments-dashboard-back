@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-unused-vars": "error",
+    "prefer-const": "error",
+    "no-console": "off",
+    "no-process-exit": "off",
+    "no-undef": "error",
+    "no-var": "error",
+    "prefer-arrow-callback": "error",
+    "no-duplicate-imports": "error"
+  },
+  "env": {
+    "node": true,
+    "es2021": true,
+    "commonjs": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  }
+}
