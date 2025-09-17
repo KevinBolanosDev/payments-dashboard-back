@@ -2,7 +2,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import { syncDatabase, testConnection } from './database.js';
-import clientesRoutes from './routes/clientes.js';
+import clientsRoutes from './routes/clients.js';
+import creditsRoutes from './routes/credits.js';
 import apiRoutes from './routes/index.js';
 
 // Configurar variables de entorno
@@ -47,7 +48,8 @@ app.get('/health', (req, res) => {
 
 // Rutas de la API
 app.use('/api', apiRoutes);
-app.use('/api/clientes', clientesRoutes);
+app.use('/api/clients', clientsRoutes);
+app.use('/api/credits', creditsRoutes);
 
 // Middleware de manejo de errores
 app.use((err, req, res) => {

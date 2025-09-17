@@ -7,12 +7,22 @@ router.get('/', (req, res) => {
   res.json({
     message: '🎯 API de Gestión de Cobros',
     version: '1.0.0',
+    status: 'active',
     availableRoutes: {
-      clientes: '/api/clientes',
-      creditos: '/api/creditos',
-      rutas: '/api/rutas',
-      cobros: '/api/cobros',
-      recibos: '/api/recibos',
+      clients: '/api/clients',
+      credits: '/api/credits',
+      // Future routes
+      payments: '/api/payments (coming soon)',
+      reports: '/api/reports (coming soon)',
+    },
+    specialEndpoints: {
+      activeClients: '/api/clients/active',
+      clientBalance: '/api/clients/:id/balance',
+      clientCredits: '/api/clients/:id/credits',
+      activeCredits: '/api/credits/active',
+      overdueCredits: '/api/credits/overdue',
+      creditsStatistics: '/api/credits/statistics',
+      creditStatus: '/api/credits/:id/status',
     },
   });
 });

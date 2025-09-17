@@ -1,0 +1,101 @@
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert(
+      'Clients',
+      [
+        {
+          firstName: 'John',
+          lastName: 'Smith',
+          phone: '+1 555 123 4567',
+          address: '123 Main Street, New York, NY 10001',
+          email: 'john.smith@email.com',
+          status: 'active',
+          currentBalance: 150000.0,
+          maxCredit: 500000.0,
+          basePrice: 25000.0,
+          observations: 'Frequent customer, good payment history',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          firstName: 'Maria',
+          lastName: 'Rodriguez',
+          phone: '+1 555 987 6543',
+          address: '456 Oak Avenue, Los Angeles, CA 90210',
+          email: 'maria.rodriguez@email.com',
+          status: 'active',
+          currentBalance: 75000.0,
+          maxCredit: 300000.0,
+          basePrice: 20000.0,
+          observations: 'New customer, requires follow-up',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          firstName: 'Robert',
+          lastName: 'Johnson',
+          phone: '+1 555 456 7890',
+          address: '789 Pine Street, Chicago, IL 60601',
+          email: 'robert.johnson@email.com',
+          status: 'inactive',
+          currentBalance: 0.0,
+          maxCredit: 200000.0,
+          basePrice: 15000.0,
+          observations: 'Customer inactive for 3 months',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          firstName: 'Sarah',
+          lastName: 'Williams',
+          phone: '+1 555 234 5678',
+          address: '321 Elm Drive, Miami, FL 33101',
+          email: 'sarah.williams@email.com',
+          status: 'active',
+          currentBalance: 220000.0,
+          maxCredit: 400000.0,
+          basePrice: 30000.0,
+          observations: 'VIP customer, priority attention',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          firstName: 'Michael',
+          lastName: 'Brown',
+          phone: '+1 555 345 6789',
+          address: '654 Maple Lane, Seattle, WA 98101',
+          email: 'michael.brown@email.com',
+          status: 'suspended',
+          currentBalance: -50000.0,
+          maxCredit: 100000.0,
+          basePrice: 18000.0,
+          observations: 'Customer with overdue payments, temporarily suspended',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          firstName: 'Emily',
+          lastName: 'Davis',
+          phone: '+1 555 567 8901',
+          address: '987 Cedar Court, Boston, MA 02101',
+          email: 'emily.davis@email.com',
+          status: 'active',
+          currentBalance: 95000.0,
+          maxCredit: 250000.0,
+          basePrice: 22000.0,
+          observations: 'Regular customer, consistent payments',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      {}
+    );
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('Clients', null, {});
+  },
+};

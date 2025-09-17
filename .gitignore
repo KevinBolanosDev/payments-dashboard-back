@@ -1,5 +1,6 @@
 node_modules
 .env
 database.sqlite
-SEQUELIZE-GUIDE.md
-COMANDOS-SEQUELIZE.md
+
+# Documents
+/documents

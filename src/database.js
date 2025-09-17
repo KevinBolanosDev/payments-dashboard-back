@@ -1,22 +1,7 @@
 // Configuración de conexión a la base de datos
-import path from 'path';
-import { Sequelize } from 'sequelize';
-import { fileURLToPath } from 'url';
+import db from '../models/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Configuración para SQLite
-const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT || 'sqlite',
-  storage: process.env.DB_STORAGE || path.join(__dirname, '..', 'database.sqlite'),
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  define: {
-    timestamps: true,
-    underscored: false,
-    freezeTableName: true
-  }
-});
+const { sequelize } = db;
 
 // Función para probar la conexión
 export const testConnection = async () => {
