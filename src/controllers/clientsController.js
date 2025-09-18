@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Clients } from '../../models/index.js';
+import { Clients, Credits } from '../../models/index.js';
 
 // GET /api/clients - Get all clients
 export const getAllClients = async (req, res) => {
@@ -23,6 +23,7 @@ export const getAllClients = async (req, res) => {
         { firstName: { [Op.like]: `%${search}%` } },
         { lastName: { [Op.like]: `%${search}%` } },
         { email: { [Op.like]: `%${search}%` } },
+        { identificationNumber: { [Op.like]: `%${search}%` } },
       ];
     }
 
@@ -37,7 +38,18 @@ export const getAllClients = async (req, res) => {
       offset: parseInt(offset),
       order: [[sortBy, sortOrder]],
       attributes: {
-        include: ['fullName'], // Include virtual field
+        include: [
+          'fullName', // Include virtual field
+          [
+            Credits.sequelize.literal(`(
+              SELECT COUNT(*)
+              FROM Credits
+              WHERE Credits.clientId = Clients.id
+              AND Credits.status = 'active'
+            )`),
+            'activeCreditsCount',
+          ],
+        ],
       },
     });
 
@@ -99,20 +111,32 @@ export const createClient = async (req, res) => {
     const {
       firstName,
       lastName,
+      identificationNumber,
       phone,
       address,
       email,
-      status = 'active',
+      status = 'inactive',
       maxCredit = 0,
       basePrice = 0,
       observations,
     } = req.body;
 
     // Validate required fields
-    if (!firstName || !lastName) {
+    if (!firstName || !lastName || !identificationNumber) {
       return res.status(400).json({
         success: false,
-        message: 'First name and last name are required fields',
+        message: 'First name, last name and identification number are required fields',
+      });
+    }
+
+    // Check if identification number already exists
+    const existingClientByIdentification = await Clients.findOne({
+      where: { identificationNumber },
+    });
+    if (existingClientByIdentification) {
+      return res.status(400).json({
+        success: false,
+        message: 'A client with this identification number already exists',
       });
     }
 
@@ -130,6 +154,7 @@ export const createClient = async (req, res) => {
     const client = await Clients.create({
       firstName,
       lastName,
+      identificationNumber,
       phone,
       address,
       email,
@@ -189,6 +214,22 @@ export const updateClient = async (req, res) => {
         return res.status(400).json({
           success: false,
           message: 'Ya existe un cliente con este email',
+        });
+      }
+    }
+
+    // Si se está actualizando el número de identificación, verificar que no exista
+    if (
+      updateData.identificationNumber &&
+      updateData.identificationNumber !== client.identificationNumber
+    ) {
+      const existingClientByIdentification = await Clients.findOne({
+        where: { identificationNumber: updateData.identificationNumber },
+      });
+      if (existingClientByIdentification) {
+        return res.status(400).json({
+          success: false,
+          message: 'Ya existe un cliente con este número de identificación',
         });
       }
     }
@@ -340,6 +381,26 @@ export const updateClientBalance = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating client balance:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor',
+      error: error.message,
+    });
+  }
+};
+
+// GET /api/clients/stats - Obtener estadísticas de clientes
+export const getClientsStats = async (req, res) => {
+  try {
+    const stats = await Clients.getStats();
+
+    res.json({
+      success: true,
+      data: stats,
+      message: 'Estadísticas obtenidas exitosamente',
+    });
+  } catch (error) {
+    console.error('Error getting clients stats:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor',

@@ -49,6 +49,47 @@ export default (sequelize, DataTypes) => {
         where: { email: email.trim().toLowerCase() },
       });
     }
+
+    static async getStats() {
+      const { Op } = sequelize.Sequelize;
+
+      // Obtener fecha del primer día del mes actual
+      const now = new Date();
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      // Contar total de clientes
+      const totalClients = await this.count();
+
+      // Contar clientes activos
+      const activeClients = await this.count({
+        where: { status: 'active' },
+      });
+
+      // Contar clientes inactivos (inactive + suspended)
+      const inactiveClients = await this.count({
+        where: {
+          status: {
+            [Op.in]: ['inactive', 'suspended'],
+          },
+        },
+      });
+
+      // Contar nuevos clientes del mes
+      const newClientsThisMonth = await this.count({
+        where: {
+          createdAt: {
+            [Op.gte]: firstDayOfMonth,
+          },
+        },
+      });
+
+      return {
+        totalClients,
+        activeClients,
+        inactiveClients,
+        newClientsThisMonth,
+      };
+    }
   }
 
   Clients.init(
@@ -69,14 +110,25 @@ export default (sequelize, DataTypes) => {
           len: [2, 50],
         },
       },
+      identificationNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [2, 50],
+          is: /^[0-9]+$/,
+        },
+      },
       phone: {
         type: DataTypes.STRING,
+        allowNull: true,
         validate: {
           is: /^[+]?[0-9\s\-()]+$/,
           len: [7, 15],
         },
       },
       address: {
+        allowNull: true,
         type: DataTypes.TEXT,
       },
       email: {
@@ -90,7 +142,7 @@ export default (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.ENUM('active', 'inactive', 'suspended'),
-        defaultValue: 'active',
+        defaultValue: 'inactive',
       },
       currentBalance: {
         type: DataTypes.DECIMAL(10, 2),

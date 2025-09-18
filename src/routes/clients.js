@@ -5,6 +5,7 @@ import {
   getActiveClients,
   getAllClients,
   getClientById,
+  getClientsStats,
   updateClient,
   updateClientBalance,
 } from '../controllers/clientsController.js';
@@ -15,6 +16,7 @@ const router = express.Router();
 // Main routes
 router.get('/', getAllClients);
 router.get('/active', getActiveClients); // Must be before /:id
+router.get('/stats', getClientsStats); // Must be before /:id
 router.get('/:id', getClientById);
 router.post('/', createClient);
 router.put('/:id', updateClient);
