@@ -5,6 +5,7 @@ import { syncDatabase, testConnection } from './database.js';
 import clientsRoutes from './routes/clients.js';
 import creditsRoutes from './routes/credits.js';
 import apiRoutes from './routes/index.js';
+import routesRoutes from './routes/routes.js';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -50,6 +51,7 @@ app.get('/health', (req, res) => {
 app.use('/api', apiRoutes);
 app.use('/api/clients', clientsRoutes);
 app.use('/api/credits', creditsRoutes);
+app.use('/api/routes', routesRoutes);
 
 // Middleware de manejo de errores
 app.use((err, req, res) => {

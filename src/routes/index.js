@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
     availableRoutes: {
       clients: '/api/clients',
       credits: '/api/credits',
+      routes: '/api/routes',
       // Future routes
       payments: '/api/payments (coming soon)',
       reports: '/api/reports (coming soon)',
@@ -23,6 +24,11 @@ router.get('/', (req, res) => {
       overdueCredits: '/api/credits/overdue',
       creditsStatistics: '/api/credits/statistics',
       creditStatus: '/api/credits/:id/status',
+      // Routes endpoints
+      routesStats: '/api/routes/stats',
+      todayExecutions: '/api/routes/today',
+      startExecution: 'POST /api/routes/:id/execute',
+      processPayment: 'POST /api/routes/:routeId/executions/:executionId/payments',
     },
   });
 });
